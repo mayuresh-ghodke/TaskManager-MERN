@@ -1,0 +1,12 @@
+# node
+node_modules/
+
+# env files
+.env
+
+# react
+/build
+/dist
+
+# logs
+npm-debug.log*
