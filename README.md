@@ -75,7 +75,3 @@ This application includes:
 - VS Code
 - NPM
 - dotenv
-
----
-
-## Project Structure
