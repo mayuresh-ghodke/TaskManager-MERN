@@ -1,4 +1,4 @@
-# Task Manager Application (MERN + Google OAuth)
+# Task Manager Application (MERN + Google OAuth + Google Calendar API)
 
 A **full-stack Task Manager Application** built with the **MERN Stack** that allows users to securely manage their tasks.
 Users can create tasks under different categories such as **Learning (progress tracking), Project (progress tracking), and Job (interview tracking)**.
