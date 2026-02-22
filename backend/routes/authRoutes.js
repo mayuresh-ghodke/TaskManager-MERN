@@ -2,6 +2,7 @@ import express from "express";
 import passport from "passport";
 import { registerUser, loginUser } from "../controllers/authController.js";
 import User from "../models/User.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -66,6 +67,11 @@ router.get("/google/connect", (req, res, next) => {
         prompt: "consent",
         state: state // passing user id forward
     }) (req, res, next);
+});
+
+router.get("/me", protect, async (req, res) => {
+    const user = await User.findById(req.user).select("-password");
+    res.json(user);
 });
 
 export default router;

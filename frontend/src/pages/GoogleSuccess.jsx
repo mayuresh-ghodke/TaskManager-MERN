@@ -21,7 +21,7 @@ function GoogleSuccess(){
 
     return(
         <>
-            <h>Logging you in...</h>
+            <h2>Logging you in...</h2>
         </>
     );
 }

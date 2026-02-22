@@ -28,18 +28,37 @@ function Dashboard() {
 
     // 1. Fetch User and Tasks on Mount
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            try {
-                const decoded = jwtDecode(token);
-                setUser(decoded);
-            } catch (err) {
-                handleLogout();
+        const init = async () => {
+            const token = localStorage.getItem("token");
+
+            if (token) {
+                try {
+                    const res = await fetch(
+                        `${process.env.REACT_APP_BACKEND_URL}/api/auth/me`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
+                    );
+
+                    if (!res.ok) {
+                        throw new Error("Unauthorized");
+                    }
+
+                    const fullUser = await res.json();
+                    setUser(fullUser);
+
+                    await fetchTasks(); // fetch tasks AFTER user loads
+                } catch (err) {
+                    handleLogout();
+                }
+            } else {
+                navigate("/login");
             }
-        } else {
-            navigate("/login");
-        }
-        fetchTasks();
+        };
+
+        init();
     }, [navigate]);
 
     // 2. Centralized Fetch Logic
@@ -88,16 +107,19 @@ function Dashboard() {
                             </button>
                         </li>
 
-                        <li className="nav-item">
-                            <button
-                                className="btn btn-warning w-100"
-                                onClick={() => {
-                                    if(!user) return;
-                                    window.location.href = `${process.env.REACT_APP_BACKEND_URL}/api/auth/google/connect?state=${user.id}`;
-                                }}>
-                                <i className="bi bi-plus-circle me-2"></i> Connect Google Calendar
-                            </button>
-                        </li>
+                        {user && !user.googleId && (
+                            <li className="nav-item">
+                                <button
+                                    className="btn btn-warning w-100"
+                                    onClick={() => {
+                                        window.location.href =
+                                            `${process.env.REACT_APP_BACKEND_URL}/api/auth/google/connect?state=${user._id}`;
+                                    }}>
+                                    <i className="bi bi-plus-circle me-2"></i>
+                                    Connect Google Calendar
+                                </button>
+                            </li>
+                        )}
 
                         <li className="nav-item">
                             <button
