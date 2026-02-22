@@ -187,7 +187,7 @@ function TaskForm() {
                                          checked={task.addToCalendar}
                                          onChange={handleChange} 
                                         />
-                                        Add to Google Calendar
+                                         Add to Google Calendar
                                     </label>
                                 </div>
 

@@ -5,19 +5,6 @@ import User from "../models/User.js";
 /* Create Task */
 const createTask = async(req, res) => {
     try{
-        // const task = await Task.create({
-        //     // form data madhun sagla body
-        //     ...req.body,
-        //     // JWT middleware madhun user id
-        //     user: req.user,
-        //     // file optional
-        //     file: req.file ? req.file.filename : null,
-
-        //     // initial status history entry
-        //     statusHistory: [
-        //         {status: req.body.status}
-        //     ]
-        // });
 
         const {addToCalendar, ...formData} = req.body;
 
@@ -33,12 +20,8 @@ const createTask = async(req, res) => {
         if(addToCalendar === "true" || addToCalendar === true){
             try{
                 const user = await User.findById(req.user);
-                console.log("User: ", user);
                 if(user?.googleAccessToken){
                     const event = await createGoogleCalendarEvent(user, task);
-
-                    console.log("User data: ", user);
-
                     // store google event ID
                     task.googleEventId = event.id;
                     await task.save();

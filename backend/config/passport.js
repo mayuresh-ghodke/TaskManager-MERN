@@ -55,7 +55,9 @@ passport.use(new GoogleStrategy({
                 });
 
                 // done(null, token) passes jwt (token) to route
-                done(null, {token, user});
+                done(null, {
+                    accessToken, refreshToken, profile, token, user
+                });
             }
             catch(error) {
                 done(error, null);

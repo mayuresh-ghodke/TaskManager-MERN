@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { getAllTasks } from "../services/taskService";
 
@@ -15,6 +15,16 @@ function Dashboard() {
     const [loading, setLoading] = useState(true);
     
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const error = params.get("error");
+
+        if (error === "email_mismatch") {
+            alert("Please use the same email as your registered account to connect Google.");
+        }
+    }, [location]);
 
     // 1. Fetch User and Tasks on Mount
     useEffect(() => {
@@ -24,7 +34,6 @@ function Dashboard() {
                 const decoded = jwtDecode(token);
                 setUser(decoded);
             } catch (err) {
-                console.error("Invalid Token");
                 handleLogout();
             }
         } else {
@@ -81,6 +90,17 @@ function Dashboard() {
 
                         <li className="nav-item">
                             <button
+                                className="btn btn-warning w-100"
+                                onClick={() => {
+                                    if(!user) return;
+                                    window.location.href = `${process.env.REACT_APP_BACKEND_URL}/api/auth/google/connect?state=${user.id}`;
+                                }}>
+                                <i className="bi bi-plus-circle me-2"></i> Connect Google Calendar
+                            </button>
+                        </li>
+
+                        <li className="nav-item">
+                            <button
                                 className={`btn w-100 text-start ${activeView === "view" ? "btn-primary" : "btn-outline-light border-0"}`}
                                 onClick={() => setActiveView("view")}>
                                 <i className="bi bi-list-check me-2"></i> View All Tasks
@@ -117,8 +137,7 @@ function Dashboard() {
 
                             {/* Logic: Show Form and refresh tasks after adding */}
                             {activeView === "create" && (
-                                <div className="card shadow-sm p-4">
-                                    <h4 className="mb-3">Add New Task</h4>
+                                <div className="">
                                     <TaskForm onTaskAdded={() => {
                                         fetchTasks();
                                         setActiveView("view");

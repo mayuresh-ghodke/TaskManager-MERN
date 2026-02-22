@@ -10,8 +10,6 @@ function GoogleSuccess(){
         const queryParams = new URLSearchParams(location.search);
         const token = queryParams.get("token");
 
-        console.log("Token from URL: ", token);
-
         if(token){
             localStorage.setItem("token", token);
             navigate("/dashboard");
@@ -19,7 +17,7 @@ function GoogleSuccess(){
         else{
             navigate("/login");
         }
-    }, [location, navigate]);
+    }, []);
 
     return(
         <>
